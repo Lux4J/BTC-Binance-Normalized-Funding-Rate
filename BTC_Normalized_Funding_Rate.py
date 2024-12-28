@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[30]:
-
-
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -14,7 +11,7 @@ import time
 def fetch_binance_funding_rate_paginated(symbol, start_time, end_time=None, limit=1000):
     url = "https://fapi.binance.com/fapi/v1/fundingRate"
     funding_data = []
-    
+
     while True:
         params = {
             "symbol": symbol,
@@ -29,9 +26,9 @@ def fetch_binance_funding_rate_paginated(symbol, start_time, end_time=None, limi
             data = response.json()
             if not data:
                 break  # Exit loop if no data is returned
-            
+
             funding_data.extend(data)
-            
+
             # Update start_time to fetch the next set of data
             start_time = data[-1]['fundingTime'] + 1
         else:
@@ -62,16 +59,16 @@ def fetch_binance_btc_price(symbol, start_time):
         "limit": 1000  # Maximum allowed per request
     }
     btc_price_data = []
-    
+
     while True:
         response = requests.get(url, params=params)
         if response.status_code == 200:
             data = response.json()
             if not data:
                 break  # No more data to fetch
-            
+
             btc_price_data.extend(data)
-            
+
             # Update start_time to fetch the next set of data
             start_time = int(data[-1][0]) + 1  # Move past the last timestamp
         else:
@@ -84,8 +81,8 @@ def fetch_binance_btc_price(symbol, start_time):
 
     # Convert to DataFrame
     if btc_price_data:
-        df = pd.DataFrame(btc_price_data, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume', 
-                                                   'close_time', 'quote_asset_volume', 'num_trades', 
+        df = pd.DataFrame(btc_price_data, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume',
+                                                   'close_time', 'quote_asset_volume', 'num_trades',
                                                    'taker_buy_base', 'taker_buy_quote', 'ignore'])
         df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
         df['btc_price'] = pd.to_numeric(df['close'])
@@ -94,9 +91,11 @@ def fetch_binance_btc_price(symbol, start_time):
     else:
         return None
 
-# Function to quantile normalize funding rates
+# Function to quantile normalize funding rates with dynamic n_quantiles
 def quantile_normalize_funding_rate(funding_rate_series):
-    quantile_transformer = QuantileTransformer(output_distribution='normal', random_state=42)
+    n_samples = len(funding_rate_series)
+    n_quantiles = min(1000, n_samples)  # Use the number of samples or 1000, whichever is smaller
+    quantile_transformer = QuantileTransformer(n_quantiles=n_quantiles, output_distribution='normal', random_state=42)
     normalized_rates = quantile_transformer.fit_transform(funding_rate_series.values.reshape(-1, 1)).flatten()
     return pd.Series(normalized_rates, index=funding_rate_series.index)
 
@@ -142,8 +141,8 @@ if funding_data_paginated is not None and btc_price_data is not None:
         ax1.axvline(date, color='green', linestyle='-', alpha=0.7, linewidth=1.5)  # Oversold
 
     # Add legend
-    fig.legend([line1, line2, plt.Line2D([0], [0], color='red', lw=2), plt.Line2D([0], [0], color='green', lw=2)], 
-               ['BTC Price (USD)', 'Funding Rate', 'Overbought (Z > 1.96)', 'Oversold (Z < -1.96)'], 
+    fig.legend([line1, line2, plt.Line2D([0], [0], color='red', lw=2), plt.Line2D([0], [0], color='green', lw=2)],
+               ['BTC Price (USD)', 'Funding Rate', 'Overbought (Z > 1.96)', 'Oversold (Z < -1.96)'],
                loc="upper left", bbox_to_anchor=(0.1, 0.9))
 
     # Title and layout adjustments
@@ -152,10 +151,3 @@ if funding_data_paginated is not None and btc_price_data is not None:
     plt.show()
 else:
     print("Failed to fetch or process BTC price and funding rate data.")
-
-
-# In[ ]:
-
-
-
-
