@@ -4,7 +4,7 @@ This Python script fetches **Bitcoin price** and **funding rate data** from Bina
 
 # How does it work?
 
-Binanace alongside ByBit are the two main exchanges for retail traders in the crypto market. Unlike tradional markets crypto has an instrument known as `perpetual futures`, which are futures contracts that don't expire. Futures in the stock market have the borrowing cost embedded within the price of the asset at expiry. Since there is no expiry funding represents the borrowing cost for traders to open a long or a short position. This borrowing cost is usually set to stablize the price difference between the perpetual market and the spot market.
+Binanace alongside Bybit are the two main exchanges for retail traders in the crypto market. Unlike tradional markets crypto has an instrument known as `perpetual futures`, which are futures contracts that don't expire. Futures in the stock market have the borrowing cost embedded within the price of the asset at expiry. Since there is no expiry funding represents the borrowing cost for traders to open a long or a short position. This borrowing cost is usually set to stablize the price difference between the perpetual market and the spot market.
 
 Specifically, funding is calculated as:
 Funding = Interest Rate + Premium Index
