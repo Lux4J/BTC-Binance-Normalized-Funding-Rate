@@ -9,9 +9,11 @@ Binanace alongside Bybit are the two main exchanges for retail traders in the cr
 Specifically, funding is calculated as:
 Funding = Interest Rate + Premium Index
 
-The Interest rate on Binance is fixed at 0.03% a day. The Premium index represents the dislocation between the perpetual market and the spot market. If the perpetual markets are trading at a higher price than the spot market then the Premium index is positive and the funding rate increases(traders positioned long have to pay more in borrowing costs and traders positioned short recieve money instead of paying borrowing costs.) Conversely if the perpetual martket is at a discount, at a sufficient enough difference, traders positioned long recieve money in the form of interest and short traders must pay a borrowing cost.
+The Interest rate on Binance is fixed at 0.03% a day. The Premium index represents the dislocation between the perpetual market and the spot market. 
 
-Observing past behaviour traders typically take on more risk the more one directional the market gets. I.e. if BTC has been trending up with minimal pullbacks traders get positioned more aggressively long and vice-versa. 
+If the perpetual markets are trading at a higher price than the spot market than the Premium index is positive and the funding rate increases(traders positioned long have to pay more in borrowing costs and traders positioned short recieve money instead of paying borrowing costs.) Conversely if the perpetual martket is at a discount, at a sufficient enough difference, traders positioned long recieve money in the form of interest and short traders must pay a borrowing cost.
+
+Observing past price action, traders typically take on more risk the more one directional price becomes. I.e. if BTC has been trending up with minimal pullbacks traders get positioned more aggressively long and vice-versa. 
 
 The point of this script is to identify regions in which the funding rate is either too high or too low to be sustainable. If funding is too high and traders are positioned too aggressively long any pullback will cause a liquidation cascade to the downside and if funding is too low and traders are positioned too aggresively short any bounce will cause a 'short squeeze'.
 
